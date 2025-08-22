@@ -1,0 +1,38 @@
+# Vivado project files
+*.jou
+*.log
+*.str
+*.xpr
+*.xpr.lock
+*.runs/
+*.sim/
+*.cache/
+*.hw/
+*.ip_user_files/
+*.srcs/
+*.data/
+*.gen/
+*.dcp
+
+# Generated bitstreams
+*.bit
+*.bin
+*.mmi
+
+# Simulation generated files
+*.wdb
+*.vcd
+*.vvp
+*.fst
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Python helper scripts cache
+__pycache__/
+*.pyc
