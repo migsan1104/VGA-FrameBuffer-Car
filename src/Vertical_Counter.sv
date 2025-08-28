@@ -13,7 +13,9 @@ module Vertical_Counter #(
   output logic [9:0] v_cnt, // 0 .. V_TOTAL-1  
   output logic       vsync, // active-low VSYNC
   output logic       v_visible, // 1 when v_cnt is in visible frame region 
-  output logic       eof     // 1-cycle pulse at end of frame, used for testing
+  output logic       eof,     // 1-cycle pulse at end of frame
+  output logic       vblank_start, // 1-cycle pulse for end of visible area
+  output logic       vblank_toggle
 );
 // setting the total v_count to indiciate one fram is complete
   localparam int V_TOTAL = V_ACTIVE + V_FP + V_SYNC + V_BP;
@@ -35,10 +37,28 @@ module Vertical_Counter #(
   assign vsync = ~((v_cnt >= (V_ACTIVE + V_FP)) &&
                    (v_cnt <  (V_ACTIVE + V_FP + V_SYNC)));
 
-  // End-of-frame: single-cycle pulse on the last line's eol
+  // single-cycle pulse on the last line's eol, drives eof and eof toggle
+  
+ // pulses for EOF and VBLANK start 
+  wire last_line_eol         = eol && (v_cnt == V_TOTAL-1);
+  wire last_visible_line_eol = eol && (v_cnt == V_ACTIVE-1);
+
+   
+  // EOF pulse logic 
   always_ff @(posedge pix_clk or negedge rst_n) begin
     if (!rst_n) eof <= 1'b0;
-    else        eof <= eol && (v_cnt == V_TOTAL-1);
+    else        eof <= last_line_eol;
+  end
+
+  // VBLANK start pulse + toggle for cdc
+  always_ff @(posedge pix_clk or negedge rst_n) begin
+    if (!rst_n) begin
+      vblank_start  <= 1'b0;
+      vblank_toggle <= 1'b0;
+    end else begin
+      vblank_start <= last_visible_line_eol;          // 1-cycle pulse
+      if (last_visible_line_eol) vblank_toggle <= ~vblank_toggle;  // toggle of vblank used for cdc
+    end
   end
 
 endmodule
