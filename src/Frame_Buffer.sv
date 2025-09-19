@@ -20,11 +20,11 @@ module Frame_Buffer #(
  
 );
     // Instruct Vivado to use Block RAMs
-  (* ram_style = "block", cascade_height = "auto" *);
+  (* ram_style = "block", cascade_height = "auto" *)
   localparam int DEPTH = W * H;
   logic [DATA_W-1:0] mem [0:DEPTH-1];
 
-  // Optional preload (uncomment if you have a hex)
+  
   // initial $readmemh("fb_init.hex", mem);
 
   // Port A: synchronous READ in pixel domain

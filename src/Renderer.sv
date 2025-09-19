@@ -13,6 +13,8 @@ module Renderer #(
   parameter int  PIX_BITS = 16,                 // 4 bits per color, 4 x 3 = 12 total bits per pixel. Pad with 4 bits
   parameter logic [PIX_BITS-1:0] CAR_COLOR = 16'h0F22, // red by default
 
+  //Write address width 
+  parameter int ADDR_W = 17,
   // Wait-state pacing cycles between sections, by default there is none, will be implemented later
   parameter int WAIT_GAP_CYCLES = 0
 )(
@@ -26,8 +28,8 @@ module Renderer #(
   input  logic signed [11:0]        dy,
 
   
-  output logic                      fb_we,
-  output logic [17:0]               fb_addr,    // linear: y*W + x
+  output logic                      fb_we,      // write enable to buffer 
+  output logic [ADDR_W - 1:0]       fb_addr,    // address to frame buffer
   output logic [PIX_BITS-1:0]       fb_wdata,   // pixel data to write
 
   // Status
@@ -39,7 +41,7 @@ module Renderer #(
 
   localparam logic [PIX_BITS-1:0] COL_BLACK = '0;         // RGB444 black
   localparam logic [PIX_BITS-1:0] COL_RED   = CAR_COLOR;  // RGB444 red
-
+// Simple function used to create addresses
   function automatic [17:0] addr_xy(input int x, input int y);
     return y*W + x;
   endfunction

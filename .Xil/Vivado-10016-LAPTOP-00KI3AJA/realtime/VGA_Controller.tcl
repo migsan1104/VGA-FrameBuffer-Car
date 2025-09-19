@@ -16,7 +16,7 @@ set rt::rc [catch {
     set rt::cmdEcho 0
     rt::set_parameter writeXmsg true
     rt::set_parameter enableParallelHelperSpawn true
-    set ::env(RT_TMP) "C:/Xilinx/VGA/.Xil/Vivado-17996-LAPTOP-00KI3AJA/realtime/tmp"
+    set ::env(RT_TMP) "C:/Xilinx/VGA/.Xil/Vivado-10016-LAPTOP-00KI3AJA/realtime/tmp"
     if { [ info exists ::env(RT_TMP) ] } {
       file delete -force $::env(RT_TMP)
       file mkdir $::env(RT_TMP)
@@ -41,31 +41,47 @@ set rt::rc [catch {
     rt::set_parameter singleFileBasedDefaultNettype false
     set rt::useElabCache false
     if {$rt::useElabCache == false} {
-      rt::read_verilog -sv -include C:/Xilinx/2025.1/Vivado/data/rsb/busdef C:/Xilinx/VGA/src/Pixel_Path.sv
+      rt::read_verilog -sv -include C:/Xilinx/2025.1/Vivado/data/rsb/busdef {
+      C:/Xilinx/VGA/src/Pixel_Path.sv
+      C:/Xilinx/VGA/VGA.srcs/sources_1/new/ResetSync.sv
+      C:/Xilinx/VGA/VGA.srcs/sources_1/new/ResetGen.sv
+      C:/Xilinx/VGA/src/Pulse_Sync.sv
+      C:/Xilinx/VGA/src/Renderer.sv
+      C:/Xilinx/VGA/src/Car_Control.sv
+      C:/Xilinx/VGA/src/Debounce_Level.sv
+      C:/Xilinx/VGA/src/Synch2FF.sv
+      C:/Xilinx/VGA/src/Frame_Buffer.sv
+      C:/Xilinx/VGA/src/Horizontal_Counter.sv
+      C:/Xilinx/VGA/src/Vertical_Counter.sv
+      C:/Xilinx/VGA/src/FrameSwap_ctr.sv
+      C:/Xilinx/VGA/VGA.srcs/sources_1/new/FrameSwap_Comb.sv
+      C:/Xilinx/VGA/VGA.srcs/sources_1/new/Clock_Gen.sv
+      C:/Xilinx/VGA/src/VGA_Controller.sv
+    }
       rt::filesetChecksum
     }
     rt::set_parameter usePostFindUniquification false
-    set rt::top Pixel_Path
+    set rt::top VGA_Controller
     rt::set_parameter enableIncremental true
     rt::set_parameter markDebugPreservationLevel "enable"
     set rt::reportTiming false
-    rt::set_parameter elaborateOnly false
-    rt::set_parameter elaborateRtl false
-    rt::set_parameter eliminateRedundantBitOperator true
-    rt::set_parameter linterFlow true
-    rt::set_parameter synthReportEmptyAndUndriven false
+    rt::set_parameter elaborateOnly true
+    rt::set_parameter elaborateRtl true
+    rt::set_parameter eliminateRedundantBitOperator false
     rt::set_parameter dataflowBusHighlighting false
     rt::set_parameter generateDataflowBusNetlist false
     rt::set_parameter dataFlowViewInElab false
     rt::set_parameter busViewFixBrokenConnections false
-    rt::set_parameter elaborateRtlOnlyFlow false
+    rt::set_parameter elaborateRtlOnlyFlow true
     rt::set_parameter writeBlackboxInterface true
     rt::set_parameter merge_flipflops true
+    rt::set_parameter srlDepthThreshold 3
+    rt::set_parameter rstSrlDepthThreshold 4
 # MODE: 
     rt::set_parameter webTalkPath {}
     rt::set_parameter synthDebugLog false
     rt::set_parameter printModuleName false
-    rt::set_parameter enableSplitFlowPath "C:/Xilinx/VGA/.Xil/Vivado-17996-LAPTOP-00KI3AJA/"
+    rt::set_parameter enableSplitFlowPath "C:/Xilinx/VGA/.Xil/Vivado-10016-LAPTOP-00KI3AJA/"
     set ok_to_delete_rt_tmp true 
     if { [rt::get_parameter parallelDebug] } { 
        set ok_to_delete_rt_tmp false 
@@ -74,15 +90,13 @@ set rt::rc [catch {
         set oldMIITMVal [rt::get_parameter maxInputIncreaseToMerge]; rt::set_parameter maxInputIncreaseToMerge 1000
         set oldCDPCRL [rt::get_parameter createDfgPartConstrRecurLimit]; rt::set_parameter createDfgPartConstrRecurLimit 1
         $rt::db readXRFFile
-      rt::run_synthesis -module $rt::top
+      rt::run_rtlelab -module $rt::top
         rt::set_parameter maxInputIncreaseToMerge $oldMIITMVal
         rt::set_parameter createDfgPartConstrRecurLimit $oldCDPCRL
     }
 
     set rt::flowresult [ source $::env(SYNTH_COMMON)/flow.tcl ]
     rt::HARTNDb_stopJobStats
-    rt::HARTNDb_reportJobStats "Synthesis Optimization Runtime"
-    rt::HARTNDb_stopSystemStats
     if { $rt::flowresult == 1 } { return -code error }
 
 

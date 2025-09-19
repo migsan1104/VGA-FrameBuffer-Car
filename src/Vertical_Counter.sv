@@ -7,7 +7,7 @@ module Vertical_Counter #(
   parameter int V_BP     = 33
 )(
   input  logic pix_clk,     // pixel clock (25.17 MHz)
-  input  logic rst_n,       // async active-low reset
+  input  logic rst,       // async active-high reset
   input  logic eol,         // 1-cycle pulse at end of each line (from h_counter)
 
   output logic [9:0] v_cnt, // 0 .. V_TOTAL-1  
@@ -21,8 +21,8 @@ module Vertical_Counter #(
   localparam int V_TOTAL = V_ACTIVE + V_FP + V_SYNC + V_BP;
 
   
-  always_ff @(posedge pix_clk or negedge rst_n) begin
-    if (!rst_n) begin
+  always_ff @(posedge pix_clk or posedge rst) begin
+    if (rst) begin
       v_cnt <= '0;
     end else if (eol) begin
       if (v_cnt == V_TOTAL-1) v_cnt <= '0;
@@ -45,14 +45,14 @@ module Vertical_Counter #(
 
    
   // EOF pulse logic 
-  always_ff @(posedge pix_clk or negedge rst_n) begin
-    if (!rst_n) eof <= 1'b0;
+  always_ff @(posedge pix_clk or posedge rst) begin
+    if (rst) eof <= 1'b0;
     else        eof <= last_line_eol;
   end
 
   // VBLANK start pulse + toggle for cdc
-  always_ff @(posedge pix_clk or negedge rst_n) begin
-    if (!rst_n) begin
+  always_ff @(posedge pix_clk or posedge rst) begin
+    if (rst) begin
       vblank_start  <= 1'b0;
       vblank_toggle <= 1'b0;
     end else begin

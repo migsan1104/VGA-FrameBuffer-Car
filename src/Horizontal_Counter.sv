@@ -10,7 +10,7 @@ module Horizontal_Counter #(
     input  logic clk,        // pixel clock
     input  logic rst,        // reset
     output logic [$clog2(H_VISIBLE+H_FRONT_PORCH+H_SYNC_PULSE+H_BACK_PORCH)-1:0] h_count, // current pixel position
-    output logic h_sync,     // horizontal sync signal
+    output logic h_sync,     // horizontal sync signal, active low 
     output logic end_of_line // high when counter finishes a full line
 );
 

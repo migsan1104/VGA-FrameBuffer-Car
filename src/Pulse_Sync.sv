@@ -13,7 +13,7 @@ module Pulse_Sync #(
     );
     logic [data_w - 1:0]  sync_out,ff_out;
     assign out =( ff_out ^ sync_out);
-    Synch2ff  #(.Data_w(data_w)) synch(.clk(clk),.rst(rst),.Data_synch(data_in),.Out_synch(sync_out));
+    Synch2FF  #(.Data_W(data_w)) synch(.clk(clk),.rst(rst),.Data_asynch(data_in),.Out_synch(sync_out));
     
     always_ff @( posedge clk) begin
         if(rst) ff_out <= 0;

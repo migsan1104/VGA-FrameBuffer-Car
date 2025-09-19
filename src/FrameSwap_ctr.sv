@@ -1,6 +1,6 @@
 
 
-module FrameSwapCtrl 
+module FrameSwap_ctr
    (
   input  logic clk_sys,         // this module exists in the system domain
   input  logic srst,            // active-high, clk_sys domain
