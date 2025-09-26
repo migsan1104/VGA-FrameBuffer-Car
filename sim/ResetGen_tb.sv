@@ -41,7 +41,7 @@ ResetGen DUTR(
         ext_reset_n_tb = 0;   // button pressed
         pll_locked_tb  = 0;   // PLL not locked
 
-        #54;
+        #55;
         ext_reset_n_tb = 1;   // release button
         pll_locked_tb  = 1;   // PLL locked
 
